@@ -78,6 +78,39 @@ def filter_main_code(json_result):
     main_code_json = {"code": {"rows": main_code_rows}}
     return json.dumps(main_code_json, indent=4)
 
+# def extract_args_from_if(code):
+#     args_part = code.split("if (")[1].split(")")[0]
+#     args = args_part.split("==")
+#     return [arg.strip() for arg in args]
+
+# def is_condition_executable(condition_code, rows):
+#     condition_var = condition_code.split("if (")[1].split("==")[0].strip()
+#     condition_value = condition_code.split("==")[1].split(")")[0].strip()
+
+#     for row in reversed(rows):
+#         if "int" in row and condition_var in row:
+#             declared_value = row.split("=")[1].strip().rstrip(";")
+#             if declared_value == condition_value:
+#                 return True
+#     return False
+# def extract_code_block(code, first=True):
+#     blocks = []
+#     stack = []
+#     current_block = []
+#     for char in code:
+#         if char == '{':
+#             stack.append(char)
+#             if len(stack) == 1:
+#                 current_block = []
+#         elif char == '}':
+#             stack.pop()
+#             if len(stack) == 0:
+#                 blocks.append("".join(current_block))
+#         if len(stack) > 0:
+#             current_block.append(char)
+#     return blocks[0] if first else (blocks[1] if len(blocks) > 1 else "")
+
+
 def transform_json(functions):
     json_result = functions["main"]
     code_rows = json.loads(json.dumps(json_result["body"], indent=4))
@@ -118,21 +151,26 @@ def transform_json(functions):
     #                 break
 
     # for row in code_rows:
-    #     if "code" in row:
-    #         new_code_rows.append(row)
-    #         for func_name, func_details in functions.items():
-    #             if "if" + " (" in row["code"]:
-    #                 new_code_rows.pop()
-    #                 args = row["code"].split(func_name + " (")[1].split(")")[0].split("==")
-    #                 args = [arg.strip() for arg in args]
-    #                 param_map = {param: arg for param, arg in zip(func_details["args"], args)}
-    #                 for func_row in func_details["body"]:
-    #                     new_func_row = func_row.copy()
-    #                     for param_name, arg_name in param_map.items():
-    #                         new_func_row["id"] = row["id"]
-    #                         new_func_row["code"] = new_func_row["code"].replace(param_name, arg_name)
-    #                     new_code_rows.append(new_func_row)
-    #                 break
+    # if "code" in row:
+    #     new_code_rows.append(row)
+    #     for each func_name, func_details in functions:
+            # if "if (" in row["code"]:
+            #     new_code_rows.pop()  # Remove the last added row
+            #     args = extract_args_from_if(row["code"])  # Extract arguments from if statement
+            #     param_map = create_param_map(func_details["args"], args)  # Map parameters to arguments
+
+            #     if is_condition_executable(row["code"], code_rows):
+            #         code_block = extract_code_block(row["code"], first=True)
+            #     else:
+            #         code_block = extract_code_block(row["code"], first=False)
+                
+            #     for func_row in func_details["body"]:
+            #         new_func_row = func_row.copy()
+            #         new_func_row["id"] = row["id"]
+            #         for param_name, arg_name in param_map.items():
+            #             new_func_row["code"] = replace_param_with_arg(new_func_row["code"], param_name, arg_name)
+            #         new_code_rows.append(new_func_row)
+            #     break
 
                     
 
